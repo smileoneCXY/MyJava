@@ -1,6 +1,7 @@
 package com.cxy.thread;
 
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @Author:chenxiaoyi
@@ -11,14 +12,18 @@ class MyData{
 
     volatile int number = 0;
 
+    AtomicInteger atomicInteger = new AtomicInteger();
+
     public void numTo60() {
         this.number = 60;
     }
 
     //增加了volatile修饰 此时验证volatile不保证原子性
-    public void numPlus(){
+    public  void numPlus(){
         this.number++;
     }
+
+    public void atomicePlus(){ this.atomicInteger.getAndIncrement(); }
 }
 
 /**
@@ -28,6 +33,10 @@ class MyData{
  *
  * 2.验证volatitle不保证原子性
  *  2.1原子性指得是什么? 不可分割 完整性 即某个线程做某个业务时 不可被加塞 不可被分割 必须整体完整
+ *  why 不加锁的情况出现 写值覆盖 写丢失 工作内存 -->主内存
+ *  解决原子性：
+ *      1.加syn
+ *      2.使用juc包下的原子类变量
  */
 public class Volatitle {
 
@@ -38,8 +47,8 @@ public class Volatitle {
         MyData myData = new MyData();
         poolAndcountDown(myData);
 
-        //newThreadFunc(myData);
-        System.out.println(Thread.currentThread().getName()+"\t finally number value: "+myData.number);
+        newThreadFunc(myData);
+        System.out.println(Thread.currentThread().getName()+"\t finally number value: "+myData.number + " atomiceInteger value: "+myData.atomicInteger);
 
     }
 
@@ -51,6 +60,7 @@ public class Volatitle {
             threadPool.submit(() -> {
                 for (int j = 0; j < 1000; j++) {
                     myData.numPlus();
+                    myData.atomicePlus();
                 }
             });
             countDownLatch.countDown();
@@ -69,6 +79,7 @@ public class Volatitle {
             new Thread(()->{
                 for (int j = 0; j < 1000; j++) {
                     myData.numPlus();
+                    myData.atomicePlus();
                 }
             },String.valueOf(i)).start();
         }
