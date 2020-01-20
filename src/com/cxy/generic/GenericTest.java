@@ -20,7 +20,7 @@ public class GenericTest<E> {
 
 //    获取Class的实例方式
 
-    @Test
+    @org.junit.Test
     public void test1() throws ClassNotFoundException {
         //1.调用运行时类的属性:.class
         Class<Person> clz1 = Person.class;
