@@ -1,5 +1,7 @@
 package com.cxy.test;
 
+import java.util.concurrent.TimeUnit;
+
 public class TestSingleon {
 
     public static void main(String[] args) {
@@ -8,7 +10,7 @@ public class TestSingleon {
             new Thread(()->{
                 myLock.lock();
                 System.out.println(Thread.currentThread().getName() + "获取锁");
-//                try { TimeUnit.SECONDS.sleep(1); } catch (InterruptedException e) { e.printStackTrace(); }
+                try { TimeUnit.SECONDS.sleep(1); } catch (InterruptedException e) { e.printStackTrace(); }
                 System.out.println(Thread.currentThread().getName() + "释放");
                 myLock.unLock();
             },"i"+i).start();

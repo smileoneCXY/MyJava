@@ -13,12 +13,11 @@ class MyLock{
 
      private AtomicReference<Thread> atomicReference = new AtomicReference<>();
 
-
       void lock(){
          Thread thread = Thread.currentThread();
          System.out.println(thread.getName()+" lock   ");
          while (!atomicReference.compareAndSet(null,thread)){
-             System.out.println("lock 比较失败后一直循环");
+//             System.out.println("lock 比较失败后一直循环");
          }
      }
 
